@@ -27,6 +27,11 @@ Run the following code by clicking the small green arrow to check your current w
 getwd()
 ```
 
+```{r}
+
+```
+
+
 If you are not in the **lab 1 folder**, please navigate to it: Session>Set Working Directory>Choose Directory>Desktop>lab1.  
 
 Re-run the code below to confirm.
