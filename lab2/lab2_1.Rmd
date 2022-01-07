@@ -63,29 +63,18 @@ We get an error here because `else` is a function in R. You also don't want to g
 ## Practice
 1. Create three new objects, `venom_GT`, `chiron`, and `veyron`. These are the fastest cars in the world. Assign each car to its top speed. The venom_GT can go 270, chiron is 261, and veyron is 268.
 ```{r}
-venom_GT<-270
-```
-```{r}
-chiron<-261
-```
-```{r}
-veyron<-268
+venom_GT <- 270
 ```
 
 2. Use arithmetic to calculate the mean top speed for the cars.
-
 ```{r}
-(270+261+268)/3
+
 ```
+
 3. Use the function `mean()` to calculate the mean top speed for the cars.
-
 ```{r}
-mean(venom_GT,chiron,veyron)
 
-top_speed<-c(venom_GT,chiron,veyron)
-mean(top_speed)
 ```
-
 
 ## Types of Data
 There are five frequently used `classes` of data: 1. numeric, 2. integer, 3. character, 4. logical, 5. complex.
@@ -102,38 +91,19 @@ To find out what type of data you are working with, use the `class()` function. 
 class(my_numeric)
 ```
 
-```{r}
-class(my_integer)
-```
-
 You can use the `is()` and `as()` functions to clarify or specify a type of data.
 ```{r}
 is.integer(my_numeric) #is my_numeric an integer?
 ```
-```{r}
-is.numeric(my_numeric)
-```
-
 
 ```{r}
-my_integer <- as.integer(my_numeric) #create a new object specified as an integer
+my_integer <- 
+  as.integer(my_numeric) #create a new object specified as an integer
 ```
 
 ```{r}
 is.integer(my_integer) #is my_numeric an integer?
 ```
-```{r}
-practice_integer<-50L
-practice_integer
-is.integer(practice_integer)
-```
-```{r}
-practice_integer<-as.numeric(practice_integer)
-is.integer(practice_integer)
-```
-
-
-
 
 ## Missing Data
 R has a special way to designate missing data, the NA. NA values in R have specific properties which are very useful if your data contains any missing values. Later this quarter we will have a session focused on dealing with NAs.  
@@ -151,16 +121,6 @@ is.na(my_missing)
 anyNA(my_missing)
 ```
 
-```{r}
-new_NA_practice<-c(10,NA,20)
-```
-```{r}
-is.na(new_NA_practice)
-```
-```{r}
-anyNA(new_NA_practice)
-```
-
 ## Practice  
 1. Let's create a vector that includes some missing data (we will discuss vectors more in part 2). For now, run the following code chunk.  
 ```{r}
@@ -169,10 +129,7 @@ new_vector <- c(7, 6.2, 5, 9, NA, 4, 9.8, 7, 3, 2)
 
 2. As we did in homework 1, calculate the mean of `new_vector`.
 ```{r}
-mean(new_vector)
-```
-```{r}
-is.na(new_vector)
+
 ```
 
 3. How do you interpret this result? What does this mean about NAs?  
