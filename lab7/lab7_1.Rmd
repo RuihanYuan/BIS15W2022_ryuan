@@ -19,8 +19,8 @@ output:
 ## Install the packages `naniar` and `visdat`
 We will use these in part 2 of today's lab.
 ```{r}
-#install.packages("naniar")
-#install.packages("visdat")
+install.packages("naniar")
+install.packages("visdat")
 ```
 
 ## Load the libraries
@@ -122,19 +122,23 @@ amniota <- readr::read_csv("data/amniota.csv")
 ```
 
 ```{r}
-
+any_na(amniota)
+```
+```{r}
+summary(amniota)
 ```
 
 2. Use one of the tools explained above to summarize NA's in the data.
 ```{r}
-
+amniota%>%
+  summarize_all(~(sum(is.na(.))))
 ```
 
 
 3. What's going on here? Try using the `hist` function on one or more of the continuous variables.
 
 ```{r}
-
+hist(amniota$egg_mass_g)
 ```
 
 4. Given that we know that the output of #2 is wrong, what do you think is the best approach for dealing with NA's in the `amniote` data?  
@@ -147,7 +151,7 @@ _A note on excel:_ you may find yourself tempted to just open the .csv in excel 
 
 Let's say we know that NA's are represented by "-999" in `amniota`. We can replace this value with NA across the data frame. You might be tempted to overwrite `amniota`, but in these cases I like to make a new object.
 ```{r}
-amniota_tidy <- amniota %>% 
+amniota_tidy <- amniota %>% #create new data frame to keep the old one
   na_if("-999")
 ```
 
@@ -194,33 +198,58 @@ For the following examples, we will use the `life_history` data for mammals. The
 
 1. Load the mammals life history data v2. Do you see any NA's?  
 ```{r}
-
+life_history<-readr::read_csv("data/mammal_lifehistories_v2.csv")
 ```
+```{r}
+summary(life_history)
+```
+
 
 
 2. Explore the data using any method that you prefer. `skimr` provides a nice output with histograms for numeric variables.  
 ```{r}
-
+hist(life_history$newborn)
 ```
-
+```{r}
+life_history%>%
+  skimr::skim()
+```
 
 3. Replace the entries that represent NA's in the data using `na_if()`. Double check your work.
 ```{r}
-
+life_history_tidy<-life_history%>%
+  na_if("-999")
 ```
 
 ```{r}
-
+summary(life_history_tidy)
 ```
 
 ```{r}
+life_history%>%
+  skimr::skim()
+```
 
+
+
+```{r}
+life_history_tidy%>%
+  summarize_all(~(sum(is.na(.))))
+```
+```{r}
+life_history_tidy%>%
+  summarize(number_na=sum(is.na(life_history_tidy)))#sum of all na
 ```
 
 
 4. In which variable are the most NAs in the data frame?
 ```{r}
-
+life_history_tidy %>% 
+  purrr::map_df(~ sum(is.na(.))) %>% 
+  pivot_longer(everything(),
+    names_to= "variables",
+    values_to = "num_nas") %>% 
+  arrange(desc(num_nas))
 ```
 
 

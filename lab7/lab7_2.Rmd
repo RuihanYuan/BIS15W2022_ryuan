@@ -42,25 +42,42 @@ life_history <- read_csv("data/mammal_lifehistories_v3.csv") %>% clean_names()
 
 2. Use one or more of the functions from the last lab to determine if there are NA's in the data, how they are represented, and where they are located.
 ```{r}
-
+summary(life_history)
 ```
 
 ```{r}
-
+life_history%>%
+  skimr::skim()
+```
+```{r}
+life_history%>%
+  purrr::map_df(~sum(is.na(.)))#map to data frame
 ```
 
 
 3. Can we use a single approach to deal with NA's in this data set? Given what you learned in the previous lab, how would you manage the NA values?
 ```{r}
-
+life_history<-life_history%>%
+  na_if("-999")%>%
+  mutate(newborn=na_if(newborn,("not measured")))#replace not measured with na
 ```
+
+```{r}
+life_history%>%
+  purrr::map_df(~sum(is.na(.)))
+```
+```{r}
+names(life_history)
+```
+
+
 
 ## `naniar`
 `naniar` is a package that is built to manage NA's. Many of the functions it performs can also be performed using tidyverse functions, but it does provide some interesting alternatives.  
 
 `miss_var_summary` provides a clean summary of NA's across the data frame.
 ```{r}
-naniar::miss_var_summary(life_history)
+naniar::miss_var_summary(life_history)#include percent missing
 ```
 
 Notice that `max_life` has no NA's. Does that make sense in the context of this data?
@@ -71,7 +88,7 @@ hist(life_history$max_life)
 ```{r}
 life_history <- 
   life_history %>% 
-  mutate(max_life=na_if(max_life, 0))
+  mutate(max_life=na_if(max_life, 0))#replce 0 with na
 ```
 
 ```{r}
@@ -101,17 +118,21 @@ Some key information:
 
 1. Import the data and do a little exploration. Be sure to clean the names if necessary.
 ```{r}
-
+trade_wildlife<-readr::read_csv("data/cites.csv")%>%clean_names()
 ```
 
 2. Use `naniar` to summarize the NA's in each variable.
 ```{r}
-
+naniar::miss_var_summary(trade_wildlife)
 ```
 
 3. Try using `group_by()` with `naniar`. Look specifically at class and `exporter_reported_quantity`. For which taxonomic classes do we have a high proportion of missing export data?
 ```{r}
-
+trade_wildlife%>%
+  group_by(class)%>%
+  select(class,exporter_reported_quantity)%>%
+  naniar::miss_var_summary()%>% #no need for order=T
+  arrange(desc(pct_miss))
 ```
 
 ## Visualizing NAs
@@ -125,7 +146,7 @@ vis_dat(life_history) #classes of data
 ```
 
 ```{r}
-vis_miss(life_history)
+vis_miss(life_history)#only focusing on the na(w/%)
 ```
 
 ## Dealing with NA's in advance
