@@ -330,10 +330,11 @@ deserts%>%
 ```r
 deserts%>%
   filter(weight!="NA")%>%
+  filter(species=="albigula")%>%
   ggplot(aes(x=year,y=weight,fill=year))+geom_col()+
   scale_y_log10()+
   theme(plot.title = element_text(size=rel(1.5),hjust=0.5))+
-  labs(title="Observations of Weight by Years",
+  labs(title="Changes of Albigula's Weight over Years",
        x="Year",
        y="Weight")
 ```
