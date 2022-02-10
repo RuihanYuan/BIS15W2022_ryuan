@@ -170,6 +170,16 @@ homerange %>%
   ggplot(aes(x = class, y = log10.mass, fill = taxon)) +
   geom_boxplot()
 ```
+```{r}
+homerange %>% 
+  ggplot(aes(x = class, y = log10.mass, group = taxon)) + #no keys 
+  geom_boxplot()
+```
+```{r}
+homerange %>% 
+  ggplot(aes(x = class, y = log10.mass, group = taxon)) + #no need to use group and fill at the same time
+  geom_boxplot()
+```
 
 ## That's it, let's take a break!   
 
