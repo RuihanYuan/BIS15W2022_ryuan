@@ -1,0 +1,66 @@
+---
+title: "Final"
+author: "Ruihan Yuan"
+date: "2/11/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+library(here)
+library(readr)
+library(tidyverse)
+library(janitor)
+```
+
+```{r}
+getwd()
+```
+```{r}
+bird<-BirdFuncDat
+```
+
+```{r}
+glimpse(bird)
+```
+
+```{r}
+names(bird)
+```
+
+```{r}
+bird<-clean_names(bird)
+```
+
+```{r}
+names(bird)
+```
+
+
+```{r}
+bird_new<-bird%>%
+  select(bl_family_english,scientific,english,diet_inv,diet_vend,diet_vect,diet_vfish,diet_vunk,diet_scav,diet_fruit,diet_nect,diet_seed,diet_plant_o,diet_5cat,for_strat_watbelowsurf,for_strat_wataroundsurf,for_strat_ground,for_strat_understory,for_strat_midhigh,for_strat_canopy,for_strat_aerial,nocturnal,body_mass_value)
+bird_new
+```
+```{r}
+glimpse(bird_new)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
