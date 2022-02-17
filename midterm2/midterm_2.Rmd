@@ -206,7 +206,7 @@ income_tidy%>%
   labs(title = "GDP per person Growth between 1920 to 2020",
        x="Year",
        y="Income")+
-    theme(axis.text.x = element_text(hjust=1,angle=75))
+    theme(axis.text.x = element_text(hjust=1,angle=75,size=rel(0.8)))
   
 ```
 
@@ -253,7 +253,7 @@ gapminder_join%>%
   ggplot(aes(x=income,y=life_expectancy,color=country))+
   geom_line()+
   theme_bw()+
-  theme(axis.text.x = element_text(hjust=1))+
+  theme(axis.text.x = element_text(hjust=1,size = rel(0.8)))+
   labs(title = "Income Growth vs Life Expectancy",
        x="Income",
        y="Life Expectancy")
