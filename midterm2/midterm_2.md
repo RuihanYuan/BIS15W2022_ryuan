@@ -5562,6 +5562,7 @@ gapminder_join%>%
 ```
 
 ![](midterm_2_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
+
 I filtered out top 5 countries that have the most income in the year 2020. and I want to compare if their life expectancy is correlate with income over the past 200 years.We can see from the graph that as income increase, life expectancy also increases. However, we can see from Qatar and Brunei, even income grow beyond 100000, the life expectancy is not increasing.
 
 
