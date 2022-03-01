@@ -334,6 +334,11 @@ shinyApp(ui, server)
 ```
 
 
+```{r}
+#install.packages("ggVennDiagram")
+#install.packages("ggworldcloud")
+```
+
 
 
 

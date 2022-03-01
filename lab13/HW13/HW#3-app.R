@@ -1,8 +1,9 @@
 library("shiny")
 library("tidyverse")
+library("janitor")
 library("shinydashboard")
 
-uc_admit<-read_csv("data/uc_data/UC_admit.csv")%>%clean_names()
+uc_admit<-read_csv("uc_data/UC_admit.csv")%>%clean_names()
 
 ui <- dashboardPage(
   dashboardHeader(title = "UC Admission"),
