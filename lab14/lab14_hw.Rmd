@@ -1,0 +1,306 @@
+---
+title: "Lab 14 HW"
+output: 
+  html_document: 
+    keep_md: yes
+author: "Ruihan Yuan"
+date: '2022-02-28'
+---
+
+
+### Load the Libraries
+```{r}
+library(tidyverse)
+library(janitor)
+library("palmerpenguins")
+
+#install.packages("ggVennDiagram")
+library(ggVennDiagram)
+library(RColorBrewer)
+
+#install.packages("ggworldcloud")
+library(ggwordcloud)
+
+
+options(scipen=999) #cancels the use of scientific notation for the session
+```
+
+
+### Data
+```{r}
+superhero_info <- readr::read_csv("data/heroes_information.csv", na = c("", "-99", "-"))
+superhero_powers <- readr::read_csv("data/super_hero_powers.csv", na = c("", "-99", "-"))
+
+beachbugs_long <- readr::read_csv("data/beachbugs_long.csv")
+```
+
+### 1. 
+Clean up the column names (no capitals, not spaces) of `superhero_info`, then use 2 functions to remind yourself of structure of the `superhero_info` data set.
+
+```{r}
+superhero_info<-clean_names(superhero_info)
+names(superhero_info)
+```
+
+```{r}
+glimpse(superhero_info)
+```
+
+```{r}
+str(superhero_info)
+```
+
+
+
+### 2.
+Are bad guys bigger? Make box-plots of weight by `alignment` (alignment on the x-axis).
+```{r}
+superhero_info%>%
+  na.exclude()%>%
+  ggplot(aes(x=alignment,y=weight))+
+  geom_boxplot()
+```
+
+### 3. 
+Now, make a violin plot of weight by `alignment` (alignment on the x-axis). Add some color!
+  What information can you observe in the violin plot that was not visible in the boxplot?
+```{r}
+superhero_info%>%
+  filter(alignment!="NA",weight!="NA")%>%
+  ggplot(aes(x=alignment,y=weight,fill=alignment))+
+  geom_violin(alpha=0.7)
+```
+We can't see the shape of distriution of the data in boxplot. We can only see how many outliers there are but don't know its distribution from the mean.
+
+
+### 4. 
+Use `alpha = .5` in `geom_boxplot()` and `geom_violin()` to layer both plots on top of one another. What does this tell you about the distribution of weight in "`bad`" guys?
+```{r}
+superhero_info%>%
+  filter(alignment!="NA",weight!="NA")%>%
+  ggplot(aes(x=alignment,y=weight,fill=alignment))+
+  geom_violin(alpha=0.5)+
+  geom_boxplot(alpha=0.5)
+```
+The mean of bad guys' weight is at around 125, most of the bad guys' weight is under 250, only a few is above 250.
+
+### 5. 
+Box plots are great for showing how the distribution of a numeric variable (e.g. weight) varies among a categorical variable (e.g. alignment).
+  Make your own violin plot with the superhero data. 
+  What is your numeric data? 
+  -height
+  What is your categorical variable?
+  -race
+
+```{r}
+superhero_info%>%
+  filter(race!="NA",height!="NA")%>%
+  ggplot(aes(x=race,y=height,fill=race))+
+  geom_violin(alpha=0.6)+
+  coord_flip()+
+  theme_bw()
+```
+
+### 6. 
+Remind yourself what `beachbugs` looks like. Then generate a heatmap of buglevels by site and year. 
+color it with `scale_fill_gradient(low="yellow", high="red")` or colors of your choice. you may find it looks best with one color!
+(dont forget, `coord_flip()` is a quick way to improve the look of your plot if you dont like the default orientation)
+
+```{r}
+beachbugs_long
+```
+
+```{r}
+beachbugs_long%>%
+  ggplot(aes(x=site,y=year,fill=buglevels))+
+  geom_tile()+
+  scale_fill_gradient(low = "yellow",high = "red")+
+  coord_flip()
+```
+
+### 7.  
+Use the provided code to normalize the beachbug data set. 
+Then make a heatmap with the `beachbugs_normalized` data, and use the same color chois as above. Which heatmap do you think is more informative? why?
+
+```{r}
+#makes a new column of the highest buglevel observed at each site
+beachbugs_w_max <- beachbugs_long %>% 
+  group_by(site) %>% 
+  mutate(max_buglevel = max(buglevels, na.rm=T)) %>% 
+  arrange(site)
+beachbugs_w_max
+
+#makes a new table where the buglevels are normalized to the max_buglevel
+beachbugs_normalized <- beachbugs_w_max %>% 
+  group_by(site) %>% 
+  mutate(norm_buglevel = buglevels/max_buglevel) %>% 
+  arrange(site,year) %>%
+  select(site, year, norm_buglevel)   # you dont have to select(), but I think its a clearer looking table
+beachbugs_normalized
+```
+ 
+```{r}
+beachbugs_normalized%>%
+  ggplot(aes(x=site,y=year,fill=norm_buglevel))+
+  geom_tile()+
+  scale_fill_gradient(low = "yellow",high = "red")+
+  coord_flip()
+```
+The second one, because it shows the max bug level at different years so we can better know which site has the worst bug issue at different years
+
+
+### 8.
+Let's make a venn diagram of `superhero_info`, from 4 questions:
+Is their alignment evil? 
+Are their eyes red?
+Are they male?
+Are they bald?
+
+Start by making the 4 vectors, then the list of vectors. The vector for alignment is provided:
+### super heros venn
+```{r}
+# evil
+
+evil_vec <- superhero_info %>%
+  filter(alignment == "bad")%>%
+  pull(name)
+
+# red eyes
+red_eye_vec<-superhero_info%>%
+  filter(eye_color=="red")%>%
+  pull(name)
+
+# male
+male_vec<-superhero_info%>%
+  filter(gender=="male")%>%
+  pull(name)
+
+# bald
+bald_vec<-superhero_info%>%
+  filter(hair_color=="bald")%>%
+  pull(name)
+
+```
+
+Your list of vectors will look something like this:
+```{r}
+ questions_list <- list(evil_vec, red_eye_vec, male_vec, bald_vec)
+
+```
+
+### 9. 
+Let's make the venn diagram! use the code from lab as a reference. 
+```{r}
+# something like:
+ ggVennDiagram( questions_list, category.names = c("Bad", "Red Eye", "Male", "Bald"))
+
+
+
+```
+Bad people that are red-eyed
+
+### 10. Choose one intersection of the venn diagram that is interesting to you. Use dplyr to find the names of the superheros in that intersection. 
+
+```{r}
+superhero_info%>%
+  filter(alignment=="bad"&eye_color=="red")%>%
+  select(name)
+```
+
+
+
+### 11. Make another venn diagram with the `superhero_info` data. What are your questions? ( At least 2!) 
+```{r}
+#are they good?
+
+good_vec<-superhero_info%>%
+  filter(alignment=="good")%>%
+  pull(name)
+
+#are they human?
+
+human_vec<-superhero_info%>%
+  filter(race=="human")%>%
+  pull(name)
+
+#do they have hair?
+
+hair_vec<-superhero_info%>%
+  filter(hair_color!="bald")%>%
+  pull(name)
+```
+
+```{r}
+q11_hero_list<-list(good_vec,human_vec,hair_vec)
+
+ggVennDiagram(q11_hero_list,set_color=c("red","blue","brown"),category.names = c("Good","Human","Hair"))
+```
+
+
+
+### 12.
+What are some very common super powers? Lets make a word cloud with the `superhero_powers` data.
+
+Use the provided code to make the frequency table, then make a word cloud with it. 
+Remember, you can change `scale_size_area(max_size = 20)` to a different number if the words wont fit!
+
+```{r}
+head(superhero_powers)
+```
+```{r}
+power_frequency <- superhero_powers %>% 
+  select(-hero_names) %>%
+  summarise_all(~(sum(.))) %>%
+  pivot_longer(everything(), names_to = "power", values_to = "freq")
+power_frequency
+```
+
+
+```{r}
+power_frequency%>%
+  ggplot(aes(label=power,size=freq,color=power))+
+  geom_text_wordcloud()+
+  geom_text_wordcloud_area(max=1)+
+  theme_minimal()
+
+
+```
+### 13.  
+Who are some very powerful supers? 
+ Lets make a different word cloud with the `superhero_powers` data. 
+Use the provided code to make the frequency table, then make a word cloud with it.
+You can use `hero_names` for the labels, and `sum_powers` for size. 
+
+```{r}
+
+power_quantity <- superhero_powers %>% 
+  pivot_longer(-hero_names, names_to = "power", values_to = "yes_or_no") %>% 
+  group_by(hero_names) %>% 
+  mutate(sum_powers = sum(yes_or_no, na.rm=T)) %>%
+  arrange(desc(sum_powers), hero_names, desc(yes_or_no))
+power_quantity
+
+#we have to trim down to only the top 50, or it will crowd the image!
+power_quantity <- power_quantity %>% 
+  ungroup %>%
+  distinct(hero_names, sum_powers) %>%
+  slice_max(sum_powers, n = 50)
+power_quantity
+
+```
+
+
+
+```{r}
+power_quantity%>%
+  ggplot(aes(label=hero_names,size=sum_powers,color=hero_names))+
+  geom_text_wordcloud()+
+  geom_text_wordcloud_area(max=1)+
+  theme_minimal()
+
+```
+
+## That's it! 🎉
+Thanks for coding with us all winter! 
+Now go finish your group project :) 
+

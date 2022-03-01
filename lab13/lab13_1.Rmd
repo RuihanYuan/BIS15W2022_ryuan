@@ -287,6 +287,11 @@ Please install shinydashboard below for part 2!
 #install.packages("shinydashboard")
 ```
 
+
+```{r}
+#install.packages("ggwordcloud")
+```
+
 ## That's it, let's take a break!   
 
 -->[Home](https://jmledford3115.github.io/datascibiol/)
